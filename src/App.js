@@ -1,46 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import questions from '../src/components/data/questions';
 import Question from './components/Question';
 import Results from './components/Results';
 
 
 const App = () => {
-  const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [completedQuestions, setCompletedQuestions] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const questionRefs = useRef(questions.map(() => React.createRef()));
 
-  const handleNextStep = (answer) => {
-    const newAnswers = { ...answers, [currentStep + 1]: answer };
-    setAnswers(newAnswers);
-    setCompletedQuestions(completedQuestions.concat(
-      <Question 
-        key={currentStep}
-        question={questions[currentStep]} 
-        answer={answer}
-        readOnly={true}
-      />
-    ));
-    setCurrentStep(currentStep + 1);
+  const handleAnswerChange = (questionId, answer) => {
+    setAnswers({ ...answers, [questionId]: answer });
   };
+
+  // const handleEnterPress = (index) => {
+  //   const nextIndex = index + 1;
+  //   if (nextIndex < questions.length) {
+  //     // Eğer sonraki soru metin girdisi içeriyorsa, o soruya odaklan.
+  //     if (questions[nextIndex].type === 'text') {
+  //       questionRefs.current[nextIndex].current.focus();
+  //     }
+  //   } else {
+  //     // Eğer bu son soruysa ve Enter'a basıldıysa, sonuçları göster.
+  //     setShowResults(true);
+  //   }
+  // };
+
+  
+
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Form gönderimini engeller.
+    if (Object.keys(answers).length === questions.length) {
+      setShowResults(true); // Eğer tüm sorular yanıtlandıysa sonuçları göster.
+    } else {
+    alert("Lütfen tüm soruları yanıtlayın.");
+    }
+  };
+  
+
+
 
   return (
     <div className="App">
-      <div className="completed-questions">
-        {completedQuestions}
-      </div>
-      {currentStep < questions.length ? (
-        <Question 
-          key={currentStep}
-          question={questions[currentStep]} 
-          onNext={handleNextStep}
-          readOnly={false}
-        />
+      {!showResults ? (
+        <form onSubmit={handleSubmit}>
+          {questions.map((question, index) => (
+            <Question
+              key={question.id}
+              ref={questionRefs.current[index]}
+              question={question}
+              answer={answers[question.id]}
+              onAnswerChange={handleAnswerChange}
+              // onEnterPress={() => handleEnterPress(index)}
+            />
+          ))}
+          <button type="submit">Submit</button>
+        </form>
       ) : (
-        <Results answers={answers} />
+        <Results answers={answers} questions={questions} />
       )}
     </div>
   );
 };
 
-export default App;
 
+export default App;

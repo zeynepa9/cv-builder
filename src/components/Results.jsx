@@ -1,14 +1,24 @@
 import React from 'react';
 
-const Results = ({ answers }) => {
-  // Burada cevapların anlamlarını ve sonuçları gösteren mantığı ekleyeceksiniz.
+const Results = ({ answers, questions }) => {
   return (
     <div>
       <h3>Results:</h3>
-      {/* Burada answers objesini döngüye alarak sonuçları gösterin */}
-      {Object.keys(answers).map(key => (
-        <p key={key}>{`Question ${key}: ${answers[key]}`}</p>
-      ))}
+      {Object.keys(answers).map(key => {
+        const question = questions.find(q => q.id.toString() === key);
+        const answerExplanation = question?.type === 'radio'
+          ? question.explanation[answers[key]]
+          : question.explanation;
+
+        return (
+          <div key={key}>
+            <p><strong>Question {key}:</strong> {question.text}</p>
+            <p><strong>Meaning:</strong> {answerExplanation}</p>
+            <p><strong>Your answer:</strong> {answers[key]}</p>
+
+          </div>
+        );
+      })}
     </div>
   );
 };
