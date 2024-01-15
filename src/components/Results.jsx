@@ -16,8 +16,8 @@ const Results = ({ answers, questions }) => {
                 return (
                     <div key={key}>
                         <p><strong>Question {key}:</strong> {question.text}</p>
-                        <p><strong>Meaning:</strong> {answerExplanation}</p>
                         <p><strong>Your answer:</strong> {answers[key]}</p>
+                        <p><strong>Meaning:</strong> {answerExplanation}</p>
                     </div>
                 );
             })}
