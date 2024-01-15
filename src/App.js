@@ -37,10 +37,13 @@ const App = () => {
   };
 
 
+
+  
+
   const handleSubmit = (e) => {
     e.preventDefault(); 
     if (Object.keys(answers).length === questions.length) {
-      setShowResults(true); // Eğer tüm sorular yanıtlandıysa sonuçları göster.
+      setShowResults(true); 
     } else {
     alert("Lütfen tüm soruları yanıtlayın.");
     }
